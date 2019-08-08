@@ -156,9 +156,9 @@ bindsym $mod+l exec i3lock -d -c 000000
 exec --no-startup-id xautolock -time 10 -locker 'i3lock -d -c 000000'
 
 # Pulse Audio controls
-bindsym XF86AudioMute exec amixer sset 'IEC958' toggle
-bindsym XF86AudioLowerVolume exec amixer sset 'IEC958' 5%-
-bindsym XF86AudioRaiseVolume exec amixer sset 'IEC958' 5%+
+bindsym XF86AudioRaiseVolume exec amixer -D pulse sset Master 5%+
+bindsym XF86AudioLowerVolume exec amixer -D pulse sset Master 5%-
+bindsym XF86AudioMute exec amixer -D pulse set Master 1+ toggle
 
 # Media player controls
 bindsym XF86AudioPlay exec playerctl play
