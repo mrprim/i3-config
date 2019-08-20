@@ -151,17 +151,23 @@ focus_follows_mouse no
 # Arrange monitors
 exec --no-startup-id xrandr --output HDMI-3 --left-of HDMI-1
 
-# Lock machine
-bindsym $mod+l exec i3lock -d -c 000000
-exec --no-startup-id xautolock -time 10 -locker 'i3lock -d -c 000000'
-
 # Pulse Audio controls
 bindsym XF86AudioRaiseVolume exec amixer -D pulse sset Master 5%+
 bindsym XF86AudioLowerVolume exec amixer -D pulse sset Master 5%-
 bindsym XF86AudioMute exec amixer -D pulse set Master 1+ toggle
 
 # Media player controls
-bindsym XF86AudioPlay exec playerctl play
-bindsym XF86AudioPause exec playerctl pause
-bindsym XF86AudioNext exec playerctl next
-bindsym XF86AudioPrev exec playerctl previous
+set $media_play_toggle dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+set $media_pause dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause
+set $media_play_stop dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Stop
+set $media_play_prev dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
+set $media_play_next dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+
+bindsym XF86AudioPlay exec $media_play_toggle
+bindsym XF86AudioStop exec $media_play_stop
+bindsym XF86AudioPrev exec $media_play_prev
+bindsym XF86AudioNext exec $media_play_next
+
+# Lock machine
+bindsym $mod+l exec i3lock -d -c 000000 && $media_pause
+exec --no-startup-id xautolock -time 10 -locker 'i3lock -d -c 000000'
